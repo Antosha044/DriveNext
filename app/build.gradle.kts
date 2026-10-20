@@ -1,9 +1,24 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
 
+val privateConfig = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+fun quotedBuildConfigValue(name: String): String {
+    val defaultValue = if (name == "SUPABASE_STORAGE_BUCKET") "documents" else ""
+    val value = privateConfig.getProperty(name, defaultValue)
+        .replace("\\", "\\\\")
+        .replace("\"", "\\\"")
+    return "\"$value\""
+}
+
 android {
     namespace = "com.example.drivenext"
+    buildFeatures { buildConfig = true }
     compileSdk {
         version = release(37)
     }
@@ -14,6 +29,9 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
+        buildConfigField("String", "SUPABASE_URL", quotedBuildConfigValue("SUPABASE_URL"))
+        buildConfigField("String", "SUPABASE_ANON_KEY", quotedBuildConfigValue("SUPABASE_ANON_KEY"))
+        buildConfigField("String", "SUPABASE_STORAGE_BUCKET", quotedBuildConfigValue("SUPABASE_STORAGE_BUCKET"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
