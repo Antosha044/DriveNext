@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="drivenext_purple">#2D1449</color>
+    <color name="drivenext_purple_light">#F3EDF8</color>
+    <color name="drivenext_text_muted">#6B6D77</color>
 </resources>
